@@ -69,9 +69,9 @@ void Analyzer::Plot(){
         hist -> GetYaxis () -> SetLabelSize (0.03);
 	hist -> GetYaxis () -> SetTitleSize (0.03);	
 
-	canvas -> Print ("Zad2.pdf");
-	canvas -> Print ("Zad2.png");
-	canvas -> Print ("Zad2.root");
+	canvas -> Print ("Zadatak_2.pdf");
+	canvas -> Print ("Zadatak_2.png");
+	canvas -> Print ("Zadatak_2.root");
 
 
 }

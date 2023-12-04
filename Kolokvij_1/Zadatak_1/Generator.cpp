@@ -21,7 +21,7 @@ void Generator::GeneratePDF(){
 	gPad -> SetLeftMargin (0.20);
 	gPad -> SetBottomMargin (0.20);
 	canvas -> SetCanvasSize (800, 800);
-	canvas -> SetTitle ("GeneratePDF");
+	canvas -> SetTitle ("Histogram generiranih vrijednosti");
 	hist->SetFillColor(kRed);
   	hist->SetLineColor(kRed);
 	hist -> Draw ("HIST");
@@ -30,9 +30,9 @@ void Generator::GeneratePDF(){
 	hist -> GetXaxis () -> SetLabelSize (0.03);
 	hist -> GetYaxis () -> SetLabelSize (0.03);
 	
-	canvas -> Print ("zad1.pdf");
-	canvas -> Print ("zad1.png");
-	canvas -> Print ("zad1.root");
+	canvas -> Print ("Zadatak_1.pdf");
+	canvas -> Print ("Zadatak_1.png");
+	canvas -> Print ("Zadatak_1.root");
 
 }
 
