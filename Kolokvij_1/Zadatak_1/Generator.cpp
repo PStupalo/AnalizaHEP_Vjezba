@@ -22,13 +22,15 @@ void Generator::GeneratePDF(){
 	gPad -> SetBottomMargin (0.20);
 	canvas -> SetCanvasSize (800, 800);
 	canvas -> SetTitle ("GeneratePDF");
+	hist->SetFillColor(kRed);
+  	hist->SetLineColor(kRed);
 	hist -> Draw ("HIST");
 	hist -> GetXaxis () -> SetTitle ("Generated value");
 	hist -> GetYaxis () -> SetTitle ("Events / 0.25");
 	hist -> GetXaxis () -> SetLabelSize (0.03);
 	hist -> GetYaxis () -> SetLabelSize (0.03);
-	hist -> SetFillColor (kRed);
-	hist -> SetLineColor (kRed);
+	//hist -> SetFillColor (kRed);
+	//hist -> SetLineColor (kRed);
 	
 	canvas -> Print ("zad1.pdf");
 	canvas -> Print ("zad1.png");
