@@ -56,6 +56,7 @@ void Analyzer::Plot(){
 		hist -> Fill (Jpsi.M(), dR);	
 	}
 	gPad -> SetLeftMargin (0.20);
+	gPad -> SetRightMargin (0.20);
 	gPad -> SetBottomMargin (0.20);
 	gStyle -> SetPalette (kRainBow);
 	hist -> Draw ("COLZ");
