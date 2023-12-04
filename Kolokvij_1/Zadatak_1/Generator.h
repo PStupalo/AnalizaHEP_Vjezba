@@ -23,6 +23,6 @@ class Generator{
 	private:
 	int i;
 	TH1F *hist;
-	float rng, f, rng2;
+	float rn1, rn2, f;
 	TCanvas *canvas;
 };
