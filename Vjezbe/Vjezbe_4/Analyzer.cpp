@@ -1,43 +1,107 @@
-#define Analyzer_cxx
-#include "Analyzer.h"
-#include <TH2.h>
-#include <TStyle.h>
-#include <TCanvas.h>
-
-void Analyzer::Loop()
+// Include classes
+#include <Analyzer.h>
+//
+// Declaring default constructor
+Analyzer::Analyzer()
 {
-//   In a ROOT session, you can do:
-//      root> .L Analyzer.C
-//      root> Analyzer t
-//      root> t.GetEntry(12); // Fill t data members with entry number 12
-//      root> t.Show();       // Show values of entry 12
-//      root> t.Show(16);     // Read and show values of entry 16
-//      root> t.Loop();       // Loop on all entries
-//
+}
 
-//     This is the loop skeleton where:
-//    jentry is the global entry number in the chain
-//    ientry is the entry number in the current Tree
-//  Note that the argument to GetEntry must be:
-//    jentry for TChain::GetEntry
-//    ientry for TTree::GetEntry and TBranch::GetEntry
-//
-//       To read only selected branches, Insert statements like:
-// METHOD1:
-//    fChain->SetBranchStatus("*",0);  // disable all branches
-//    fChain->SetBranchStatus("branchname",1);  // activate branchname
-// METHOD2: replace line
-//    fChain->GetEntry(jentry);       //read all branches
-//by  b_branchname->GetEntry(ientry); //read only this branch
-   if (fChain == 0) return;
+// Destructor declaration
+Analyzer::~Analyzer()
+{
+}
 
-   Long64_t nentries = fChain->GetEntriesFast();
+// Function for reading txt files
+void Analyzer::ReadTxtFile(string filename)
+{
+  ifstream myReadFile;
+  myReadFile.open(filename.c_str());
+  string line;
 
-   Long64_t nbytes = 0, nb = 0;
-   for (Long64_t jentry=0; jentry<nentries;jentry++) {
-      Long64_t ientry = LoadTree(jentry);
-      if (ientry < 0) break;
-      nb = fChain->GetEntry(jentry);   nbytes += nb;
-      // if (Cut(ientry) < 0) continue;
-   }
+  _skipFirstLine = true;
+
+  if (myReadFile.is_open())
+  {
+    // Read the file line by line
+    while(getline(myReadFile, line))
+    {
+        stringstream   linestream(line);
+
+        // Since we know that first line of the file only describes data skip reading it into variables
+        if (_skipFirstLine)
+        {
+          _skipFirstLine = false;
+          continue;
+        }
+
+        // Read output and send it to dedicated variables
+        linestream >> _DecayParticle1_Name >> _DecayParticle1_isBoson >> _DecayParticle1_mass >> _DecayParticle1_E >> _DecayParticle1_px >> _DecayParticle1_py >> _DecayParticle1_pz >>
+                      _DecayParticle2_Name >> _DecayParticle2_isBoson >> _DecayParticle2_mass >> _DecayParticle2_E >> _DecayParticle2_px >> _DecayParticle2_py >> _DecayParticle2_pz;
+
+    }
+  }
+  myReadFile.close();
+}
+
+
+
+
+// Function for converting txt files to root files
+void Analyzer::ConvertTxtToRootFile(string input_filename, TString output_filename)
+{
+
+  myReadFile.open(input_filename.c_str());
+
+  _skipFirstLine = true;
+
+  // Create a ROOT file for storing data
+  TFile *hfile = TFile::Open(output_filename,"RECREATE");
+
+  // Create a tree that will store our Higgs events
+  tree = new TTree("Tree","My Higgs boson decay data");
+
+  // Declare a branch for every variable that will go in the tree, set it to point to corresponding variables that will be used to fill the TTree
+
+  tree->Branch("DecayParticle1_Name",&_DecayParticle1_Name);//Use default leaflist for strings
+  tree->Branch("DecayParticle1_isBoson",&_DecayParticle1_isBoson,"_DecayParticle1_isBoson/I");
+  tree->Branch("DecayParticle1_mass",&_DecayParticle1_mass,"_DecayParticle1_mass/F");
+  tree->Branch("DecayParticle1_px",&_DecayParticle1_px,"_DecayParticle1_px/F");
+  tree->Branch("DecayParticle1_py",&_DecayParticle1_py,"_DecayParticle1_py/F");
+  tree->Branch("DecayParticle1_pz",&_DecayParticle1_pz,"_DecayParticle1_pz/F");
+  tree->Branch("DecayParticle1_E",&_DecayParticle1_E,"_DecayParticle1_E/F");
+
+  tree->Branch("DecayParticle2_Name",&_DecayParticle2_Name);//Use default leaflist for strings
+  tree->Branch("DecayParticle2_isBoson",&_DecayParticle2_isBoson,"_DecayParticle2_isBoson/I");
+  tree->Branch("DecayParticle2_mass",&_DecayParticle2_mass,"_DecayParticle2_mass/F");
+  tree->Branch("DecayParticle2_px",&_DecayParticle2_px,"_DecayParticle2_px/F");
+  tree->Branch("DecayParticle2_py",&_DecayParticle2_py,"_DecayParticle2_py/F");
+  tree->Branch("DecayParticle2_pz",&_DecayParticle2_pz,"_DecayParticle2_pz/F");
+  tree->Branch("DecayParticle2_E",&_DecayParticle2_E,"_DecayParticle2_E/F");
+
+  if (myReadFile.is_open())
+  {
+    while(getline(myReadFile, line))
+    {
+        stringstream linestream(line);
+
+        // Since we know that first line of the file only describes data skip reading it into variables
+        if (_skipFirstLine)
+        {
+          _skipFirstLine = false;
+          continue;
+        }
+
+        // Read the file line and store it in dedicated variables
+        linestream >> _DecayParticle1_Name >> _DecayParticle1_isBoson >> _DecayParticle1_mass >> _DecayParticle1_E >> _DecayParticle1_px >> _DecayParticle1_py >> _DecayParticle1_pz >>
+                      _DecayParticle2_Name >> _DecayParticle2_isBoson >> _DecayParticle2_mass >> _DecayParticle2_E >> _DecayParticle2_px >> _DecayParticle2_py >> _DecayParticle2_pz;
+
+        // Fill one instance in the tree with branch values taking their values from addresses of dedicated variables
+        tree->Fill();
+    }
+  }
+
+  // Write our TTree in the currently opened ROOT file
+  tree->Write();
+
+  delete hfile;
 }
