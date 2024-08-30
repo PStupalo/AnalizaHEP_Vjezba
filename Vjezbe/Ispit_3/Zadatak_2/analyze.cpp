@@ -1,18 +1,15 @@
 #include "Analyzer.h"
 
 int main() {
-    // Kreiranje objekta klase Analyzer
     Analyzer *analyzer = new Analyzer();
 
-    // Fitanje histograma pomoću binned Maximum Likelihood metode
-    analyzer->FitHistogram();
+    analyzer->FitHistogram(); // Fitanje histograma
+    analyzer->DrawNegativeLogLikelihood(); // Nacrtaj -2lnL funkciju
+    analyzer->DrawFitAndHistogram(); // Nacrtaj histogram i fitanu funkciju
 
-    // Crtanje dvostrukog negativnog logaritma Likelihood funkcije (-2lnL) u ovisnosti o parametru a
-    analyzer->PlotNegativeLogLikelihood();
-
-    // Brisanje objekta kako bi se oslobodili resursi
-    delete analyzer;
+    delete analyzer; // Oslobodi memoriju
 
     return 0;
 }
+
 
