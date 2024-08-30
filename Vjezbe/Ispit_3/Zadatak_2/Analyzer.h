@@ -32,17 +32,17 @@ using namespace std;
 
 class Analyzer {
 public:
-    Analyzer(); // Konstruktor
-    ~Analyzer(); // Destruktor
+    Analyzer();  // Konstruktor
+    virtual ~Analyzer();  // Destruktor
 
-    void FitHistogram();
-    void DrawNegativeLogLikelihood();
-    void DrawFitAndHistogram();
+    void FitHistogram();  // Metoda za fitanje histograma
+    double NegativeLogLikelihood(double *x, double *par);  // Funkcija za izračunavanje -2lnL
+    void PlotNegativeLogLikelihood();  // Metoda za crtanje -2lnL u ovisnosti o parametru a
 
 private:
-    TFile *inputFile; 
-    TH1F *histogram; 
-    TF1 *fitFunc;
+    TFile* inputFile;
+    TH1F* histogram;  
+    TF1* fitFunction; 
 };
 
 #endif
