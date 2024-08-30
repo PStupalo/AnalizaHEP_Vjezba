@@ -54,20 +54,48 @@ void Analyzer::TestHypotheses() {
         h_H1->Fill(CalculateMedian(dataH1));
     }
 
+    // Normalizacija histograma
     h_H0->Scale(1.0 / h_H0->Integral());
     h_H1->Scale(1.0 / h_H1->Integral());
 
+    // Postavljanje stila platna
     TCanvas* canvas = new TCanvas("canvas", "Hypothesis Testing Results", 800, 600);
-    h_H0->SetLineColor(kGreen + 2);
-    h_H1->SetLineColor(kMagenta + 2);
-    h_H0->Draw();
-    h_H1->Draw("SAME");
+    canvas->SetGrid();
+    gStyle->SetOptStat(0); // Sakrij statističke informacije
 
+    // Podešavanje stila za histograme
+    h_H0->SetLineColor(kRed);
+    h_H0->SetLineWidth(2);
+    h_H1->SetLineColor(kBlue);
+    h_H1->SetLineWidth(2);
+
+    // Crtanje histograma
+    h_H0->Draw("HIST");
+    h_H1->Draw("HIST SAME");
+
+    // Dodavanje legendi
     TLegend* legend = new TLegend(0.7, 0.7, 0.9, 0.9);
-    legend->AddEntry(h_H0, "H0: parameter = 0.9", "l");
-    legend->AddEntry(h_H1, "H1: parameter = 1.1", "l");
+    legend->AddEntry(h_H0, "H0: alpha = 0.9", "l");
+    legend->AddEntry(h_H1, "H1: alpha = 1.1", "l");
     legend->Draw();
-    canvas->SaveAs("HypothesisResults.png");
+
+    // Dodavanje vertikalnih linija za medijane
+    double median_H0 = h_H0->GetBinCenter(h_H0->GetMaximumBin());
+    double median_H1 = h_H1->GetBinCenter(h_H1->GetMaximumBin());
+
+    TLine* line_H0 = new TLine(median_H0, 0, median_H0, h_H0->GetMaximum());
+    line_H0->SetLineColor(kRed);
+    line_H0->SetLineStyle(2);
+    line_H0->SetLineWidth(2);
+    line_H0->Draw();
+
+    TLine* line_H1 = new TLine(median_H1, 0, median_H1, h_H1->GetMaximum());
+    line_H1->SetLineColor(kBlue);
+    line_H1->SetLineStyle(2);
+    line_H1->SetLineWidth(2);
+    line_H1->Draw();
+
+    canvas->SaveAs("HypothesisResults_with_Lines.png");
 }
 
 void Analyzer::Init(TTree *tree) {
