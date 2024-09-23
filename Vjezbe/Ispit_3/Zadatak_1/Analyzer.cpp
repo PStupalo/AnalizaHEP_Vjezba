@@ -39,8 +39,8 @@ void Analyzer::TestHypotheses() {
     const int numExperiments = 10000;
     const int numMeasurements = 1000;
 
-    TH1F* h_H0 = new TH1F("h_H0", "Median Distribution for H0", 100, 0, 10);
-    TH1F* h_H1 = new TH1F("h_H1", "Median Distribution for H1", 100, 0, 10);
+    TH1F* h_H0 = new TH1F("h_H0", "Median Distribution for H0", 100, 0, 1);
+    TH1F* h_H1 = new TH1F("h_H1", "Median Distribution for H1", 100, 0, 1);
 
     for (int experiment = 0; experiment < numExperiments; experiment++) {
         vector<double> dataH0(numMeasurements), dataH1(numMeasurements);
